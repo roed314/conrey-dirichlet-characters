@@ -14,6 +14,9 @@
 #include "stdsage.pxi"  # ctrl-c interrupt block support
 #include "cdefs.pxi"
 
+#!python
+#cython: cdivision=True
+
 from libc.stdlib cimport malloc, free
 
 from sage.all import factor,        \
@@ -162,7 +165,7 @@ cdef class DirichletGroup_conrey:
         self.q_even = 1
         self.q_odd = self.q
         while self.q_odd % 2 == 0:
-            self.q_odd = self.q_odd/2
+            self.q_odd = self.q_odd / 2
             self.q_even = self.q_even * 2
 
         if self.q_odd > 1:
@@ -1421,7 +1424,7 @@ cdef class DirichletCharacter_conrey:
         cdef long q_even = self._parent.q_even
         cdef long * B = self._parent.B
         cdef long n = self._n % q_even
-        cdef long e, dlog
+        cdef long e, dlog, f, conductor, m
 
         # We basically do everything by hand.
 
@@ -1465,7 +1468,7 @@ cdef class DirichletCharacter_conrey:
             while m % 2 == 0:
                 m /= 2
                 f = f + 1
-            conductor = q_even/(2**f)
+            conductor = q_even / (1 << f)
             index = power_mod(5, m, conductor)
             if epsilon == -1:
                 index = conductor - index

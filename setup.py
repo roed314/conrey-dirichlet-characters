@@ -3,7 +3,7 @@
 # and the cython documentation
 
 # Build using 'python setup.py'
-import os, sys
+import os, sys, six
 #from distutils.core import setup, Extension
 from setuptools import setup, Extension
 from Cython.Distutils import build_ext
@@ -25,14 +25,24 @@ ext_modules = [Extension('dirichlet_conrey', sources=['dirichlet_conrey.pyx', ],
                      extra_compile_args = extra_compile_args,
                      extra_link_args = extra_link_args)]
 
-
-include_dirs = [SAGE_LOCAL + "/include/csage/",
-                SAGE_LOCAL + "/include/",
-                SAGE_LOCAL + "/include/python2.7",
-                SAGE_LOCAL + "/lib/python2.7/site-packages/numpy/core/include/",
-                SAGE_SRC + "/sage/ext/",
-                SAGE_SRC,
-                ]
+if six.PY2:
+    include_dirs = [
+        SAGE_LOCAL + "/include/csage/",
+        SAGE_LOCAL + "/include/",
+        SAGE_LOCAL + "/include/python2.7",
+        SAGE_LOCAL + "/lib/python2.7/site-packages/numpy/core/include/",
+        SAGE_SRC + "/sage/ext/",
+        SAGE_SRC,
+    ]
+else:
+    include_dirs = [
+        SAGE_LOCAL + "/include/csage/",
+        SAGE_LOCAL + "/include/",
+        SAGE_LOCAL + "/include/python3.7m",
+        SAGE_LOCAL + "/lib/python3.7/site-packages/numpy/core/include/",
+        SAGE_SRC + "/sage/ext/",
+        SAGE_SRC,
+    ]
 
 setup(name='DirichletConrey',
       version='0.111',
